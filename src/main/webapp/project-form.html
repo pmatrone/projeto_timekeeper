@@ -1,0 +1,131 @@
+<h1>New project</h1>
+
+<div ng-controller="project-form_controller">
+
+    <div class="alert alert-warning" ng-show="error_msg != null">
+        <span class="pficon-layered">
+          <span class="pficon pficon-warning-triangle"></span>
+          <span class="pficon pficon-warning-exclamation"></span>
+        </span> 
+            {{error_msg.error}}
+    </div>
+    
+    <div class="alert alert-success" ng-show="saved">
+      <span class="pficon pficon-ok"></span>
+            Project {{prj_name}} was successfully saved.
+    </div>
+
+<form class="form-horizontal" name="form">
+    <div class="form-group" ng-class="{'has-error': form.name.$invalid}">
+        <label for="name" class="col-md-2 control-label">Project name</label>
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="name" name="name" required ng-model="project.name">
+        </div>
+        <div class="col-md-4">
+            <span class="help-block" ng-show="form.name.$error.required">Required field</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="desc" class="col-md-2 control-label">Project description</label>
+        <div class="col-md-2">
+            <textarea class="form-control" id="desc" rows="3" ng-model="project.description" maxlength="512"></textarea>
+        </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error': form.pa.$invalid}">
+        <label for="pa" class="col-md-2 control-label">PA Number</label>
+        <div class="col-md-1">
+            <input type="text" class="form-control" ui-mask="?9999999999" id="pa" name="pa" ng-required="true" ng-model="project.paNumber">
+        </div>
+        <div class="col-md-4">
+            <span class="help-block" ng-show="form.pa.$error.required">Required field</span>
+        </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error': form.pm.$invalid}">
+        <label for="pm" class="col-md-2 control-label">Project manager</label>
+        <div class="col-md-2">
+            <select class="form-control" required id="pm" name="pm" ng-model="project.projectManagerDTO.id" ng-options="pm.id as pm.name for pm in pms"/>
+        </div>
+        <div class="col-md-4">
+            <span class="help-block" ng-show="form.pm.$error.required">Required field</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="checkbox">
+                <label> <input type="checkbox" ng-model="project.enabled"> Enable project to people assing working hours ?
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error': project.initialDate == null}">
+        <label for="startdate" class="col-md-2 control-label">Start date</label>
+        <div class="col-md-2">
+            <p class="input-group">
+                <input type="text" class="form-control" id="startdate" name="startdate" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="project.initialDate" is-open="openedStartDate"
+                    ng-required="true" close-text="Close" datepicker-options="dateOptions" readonly="readonly"/> 
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openStartDataPicker($event)">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <span class="help-block" ng-show="form.startdate.$error.required">Required field</span>
+        </div>
+    </div>
+    <div class="form-group" ng-class="{'has-error': project.endDate == null}">
+        <label for="enddate" class="col-md-2 control-label">End date</label>
+        <div class="col-md-2">
+            <p class="input-group">
+                <input type="text" class="form-control" id="enddate" name="enddate" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="project.endDate" is-open="openedEndDate"
+                    ng-required="true" close-text="Close" datepicker-options="dateOptions" readonly="readonly"/> 
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openEndDataPicker($event)">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <span class="help-block" ng-show="form.enddate.$error.required">Required field</span>
+        </div>
+    </div>
+    
+    <div class="form-group" >
+        <label for="task" class="col-md-2 control-label">New task name</label>
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="task" name="task" ng-model="temp_task.name" />
+        </div>
+        <button type="button" class="btn btn-primary" ng-disabled="taskType.id == -1" ng-click="addTask()">Add task</button>
+        <small ng-hide="taskType.id != -1">You must select a task type to enable this button</small>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="com-sm-2">
+                <div class="btn-group">
+                    <label data-ng-repeat="tt in taskTypes" class="btn btn-success" ng-model="taskType.id" uib-btn-radio="tt.id">{{tt.name}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="com-sm-2">
+                <label>Tasks</label>
+                <ul>
+                    <li data-ng-repeat="task in list_tasks">{{task.name}} ({{taskTypes | taskName:task.taskType}}) - <a href="" ng-show="task.dissociateOfProject" ng-click="removeTask(task)">Remove</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary" ng-click="saveProject(project)">Save</button>
+        </div>
+    </div>
+</form>
+
+</div>
+
+<a class="btn btn-default" href="#/projects">Go to main project list page.</a>

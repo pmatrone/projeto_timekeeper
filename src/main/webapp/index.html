@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if IE 9]><html class="ie9"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en_US" ng-app="timekeeperApp">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Red Hat Consulting Services - Partner timekeeper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+    
+    <link href="css/rcue.css" rel="stylesheet" media="screen, print">
+    <link href="css/rcue-additions.css" rel="stylesheet" media="screen, print">
+    <link href="css/smoothness/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
+    <link href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="css/table-timecard.css" rel="stylesheet">
+    
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/lib/jquery.mask.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+
+    <!-- PatternFly Custom Componets -  Sidebar, Popovers and Datatables Customizations -->
+    <!-- Note: jquery.dataTables.js must occur in the html source before patternfly*.js.-->
+    <script src="bower_components/patternfly/dist/js/patternfly.min.js"></script>
+    
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+
+
+    <!-- Angular-Bootstrap -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <!-- Angular-Sanitize -->
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+
+    <!-- Angular-PatternFly  -->
+    <script src="bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+
+    <!-- CSV  -->
+    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+
+    <!-- C3, D3 - Charting Libraries. Only required if you are using the 'patternfly.charts' module-->
+    <!--script src="bower_components/patternfly/components/c3/c3.min.js"></script>
+    <script src="bower_components/patternfly/components/d3/d3.min.js"></script-->
+
+    <!--script src="js/lib/patternfly.min.js"></script-->
+    <script src="js/lib/angular-validation-match.min.js"></script>
+
+    <script src="bower_components/angular-smart-table/dist/smart-table.min.js"></script>
+    
+
+    <!-- Services -->
+    <script src="js/services/service.module.js"></script>
+    <script src="js/services/project.service.js"></script>
+    <script src="js/services/person.service.js"></script>
+    <script src="js/services/auth.service.js"></script>
+    <script src="js/services/consultant.service.js"></script>
+    <script src="js/services/timecard.service.js"></script>
+    <script src="js/services/organization.service.js"></script>
+    <script src="js/services/purchase-order.service.js"></script>
+
+    <!-- Controllers -->
+    <script src="js/controllers/controller.module.js"></script>
+    <script src="js/controllers/project.controller.js"></script>
+    <script src="js/controllers/timecard.controller.js"></script>
+
+
+
+    <script src="js/login-app.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/org.js"></script>
+    <script src="js/person.js"></script>
+    <script src="js/person-list.controller.js"></script>
+    <script src="js/project.js"></script>
+    <script src="js/controllers/purchase-order-list.controller.js"></script>
+    <script src="js/controllers/purchase-order-form.controller.js"></script>
+    <script src="js/timecard.js"></script>
+    <script src="js/project-list.controller.js"></script>
+    <script src="js/project-cs.controller.js"></script>
+    <script src="js/project-form.controller.js"></script>
+    <script src="js/project-consultant.controller.js"></script>
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-pf" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/timekeeper">
+          <img src="img/brand.svg" alt="Red Hat&reg; Timekeeper" />
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-collapse-1" ng-controller="menu_ctrl">
+        <ul class="nav navbar-nav navbar-primary">
+          <li ng-class="getClass('/persons')"><a href="#/persons" ng-show="role(['redhat_manager', 'admin'])">Consultant</a></li>
+          <li ng-class="getClass('/dashboard')"><a href="#/dashboard" ng-show="role(['redhat_manager', 'admin'])">Dashboard</a></li>
+          <li ng-class="getClass('/organization')"><a href="#/organizations" ng-show="role(['redhat_manager', 'admin'])">Organization</a></li>
+          <li ng-class="getClass('/purchase-order')"><a href="#/purchase-orders" ng-show="role(['redhat_manager', 'admin'])">Purchase Order</a></li>
+          <li ng-class="getClass('/project')"><a href="#/projects" ng-show="role(['redhat_manager', 'admin'])">Project</a></li>
+          <li ng-class="getClass('/project')"><a href="#/projects-cs" ng-show="role(['partner_consultant'])">Project</a></li>
+          <li ng-class="getClass('/timecard')"><a href="#/timecards" ng-show="role(['redhat_manager', 'admin'])">Timecard</a></li>
+          <li ng-class="getClass('/timecard')"><a href="#/timecards-partner" ng-show="role(['partner_manager'])">Timecard</a></li>
+          <li ng-class="getClass('/timecard')"><a href="#/timecards-cs" ng-show="role(['partner_consultant'])">Timecard</a></li>
+          <li ng-class="getClass('/profile')"><a href="#/profile/{{user.id}}">{{user.name}}</a></li>
+          <li><a href="#/" ng-click="logout()">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+      
+        <div class="alert alert-warning" ng-controller="message_ctrl" ng-show="hasMessages()">
+            <span class="pficon-layered">
+              <span class="pficon pficon-warning-triangle"></span>
+              <span class="pficon pficon-warning-exclamation"></span>
+            </span>
+            <ul>
+                <li ng-repeat="message in messages">{{message}}</li> 
+            </ul>
+        </div>
+      
+        <div ng-view class="col-md-12">
+        </div><!-- /col -->
+      </div><!-- /row -->
+    </div><!-- /container -->
+    
+  </body>
+</html>

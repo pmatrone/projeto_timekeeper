@@ -1,0 +1,55 @@
+<script src="js/lib/jquery.dataTables.js"></script>
+<h1>Timecards</h1>
+
+<p ng-controller="show_modal_select_project">
+
+    <script type="text/ng-template" id="modal_select_project.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Select a project</h3>
+        </div>
+        <form class="form-horizontal" name="form">
+            <div class="modal-body">
+                <div class="form-group" ng-class="{'has-error': form.project.$invalid}">
+                    <label for="prj_pm" class="col-md-2 control-label">Project</label>
+                    <div class="col-lg-6">
+                        <select class="form-control" required name="project" ng-model="timecard.project.id" ng-options="project.id as project.name for project in projects"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+                    <button class="btn btn-primary" ng-click="ok(timecard.project.id)" ng-disabled="form.$invalid">Next</button>
+                </div>
+            </div>
+        </form>
+    </script>
+
+    <button class="btn btn-primary" ng-click="select_project()">Add a timecard</button>
+</p>
+
+<div class="table-responsive" ng-controller="timecard_cs_list_ctrl" ng-cloak>
+    <div ng-show="loading">Loading..</div>
+    <div class="alert alert-info" ng-show="timecards.length == 0">
+        <span class="pficon pficon-info"></span> There are no timecard to list.<br> {{timecard.msg}}<br>
+    </div>
+    <table class="table table-striped table-bordered table-hover" ng-hide="timecards.length == 0">
+        <thead>
+            <tr>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Period</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="tc in timecards">
+
+                <td style="vertical-align: middle;"><a ng-href="#/timecard-edit/{{tc.id}}">{{tc.project.name}}</a></td>
+                <td style="vertical-align: middle;">{{tc.statusDescription}}</td>
+                <td style="vertical-align: middle;">{{tc.firstDate|date:'dd-MMMM-yyyy'}} to {{tc.lastDate|date:'dd-MMMM-yyyy'}}</td>
+                <td style="vertical-align: middle;">
+                    <a class="btn btn-danger" ng-show="tc.status == 1" ng-click="delete(tc.id)">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

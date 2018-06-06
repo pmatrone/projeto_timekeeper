@@ -1,0 +1,97 @@
+<h1>New Purchase Order</h1>
+
+<div ng-controller="purchaseOrderFormController" ng-cloak>
+	<div ng-show="loading">Loading..</div>
+	<div class="alert alert-warning" ng-show="error_msg != null">
+		<span class="pficon-layered"> <span
+			class="pficon pficon-warning-triangle"></span> <span
+			class="pficon pficon-warning-exclamation"></span>
+		</span> {{error_msg.error}}
+	</div>
+
+	<div class="alert alert-success" ng-show="saved">
+		<span class="pficon pficon-ok"></span> Purchase Order was successfully saved.
+	</div>
+
+	<form class="form-horizontal" name="form">
+		<!--
+		<div class="form-group" ng-class="{'has-error': form.name.$invalid}">
+			<label for="partner_company" class="col-md-2 control-label">Partner Company</label>
+			<div class="col-md-2">
+				<select ng-disabled="selected" 
+						class="form-control" 
+						ng-model="data.partnerOrganization" 
+						ng-options="partner.name for partner in listPartners track by partner.id">
+					<option value="" disabled selected>Select your option</option>
+				</select>
+			</div>
+		</div>
+		-->
+
+		<div class="form-group" ng-class="{'has-error': form.name.$invalid}">
+			<label for="project_name" class="col-md-2 control-label">Project name</label>
+			<div class="col-md-2">
+				<select ng-disabled="selected" 
+						class="form-control" 
+						ng-selected="{{project.id == data.project.id}}"
+						ng-model="data.project" 
+						ng-change="listTaskByProject()" 
+						ng-options="project.name for project in listProjects track by project.id">
+					<option value="" disabled selected>Select your option</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="form-group" ng-class="{'has-error': form.name.$invalid}">
+			<label for="task_name" class="col-md-2 control-label">Task name</label>
+			<div class="col-md-2">
+				<select ng-disabled="selected" 
+						class="form-control" 
+						ng-selected="{{task.id == data.task.id}}"
+						ng-model="data.task" 
+						ng-change="listConsultantByTask()" 
+						ng-options="task.name for task in listTasks track by task.id">
+					<option value="" disabled selected>Select your option</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group" ng-class="{'has-error': form.name.$invalid}" >
+			<label for="consultant_name" class="col-md-2 control-label">Consultant</label>
+			<div class="col-md-2">
+				<select ng-disabled="selected" class="form-control" ng-model="data.person" ng-options="consultant.name for consultant in listConsultants track by consultant.id">
+				<option value="" disabled selected>Select your option</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="purchase_order" class="col-md-2 control-label">Purchase Order</label>
+			<div class="col-md-2">
+				<input type="number" ng-model="data.purchaseOrder" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="prj_consultants" class="col-md-2 control-label">Total Hours</label>
+			<div class="col-md-2">
+				<input type="number" ng-model="data.totalHours" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="prj_consultants" class="col-md-2 control-label">Unit Value</label>
+			<div class="col-md-2">
+				<input type="number" ng-model="data.unitValue" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-3">
+				<button type="submit" class="btn btn-primary" ng-click="save(data)"  ng-disabled="saved || form.$invalid">Save</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<a class="btn btn-default" href="#/purchase-orders">Go to main purchase order list page.</a>

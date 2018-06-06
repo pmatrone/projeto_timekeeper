@@ -1,0 +1,42 @@
+<script src="js/lib/jquery.dataTables.js"></script>
+<h1>Projects</h1>
+<div class="table-responsive" ng-controller="project_list_controller" ng-cloak>
+
+<p><a class="btn btn-primary" href="#/project-new">Add a project</a>
+<input type="checkbox" ng-model="list_disabledProjects" ng-click="gridListProjects()"/>  List disabled projects
+</p>
+
+    <div ng-show="loading">Loading..</div>
+    <div class="alert alert-info" ng-show="projects.projects.length == 0">
+        <span class="pficon pficon-info"></span> There is no project to list, do you want to <a href="#/project-new">add a project</a> ?.<br> 
+        {{project.msg}}<br>
+    </div>
+    <table class="table table-striped table-bordered table-hover" ng-hide="projects.projects.length == 0">
+        <thead>
+            <tr>
+                <th>PA</th>
+                <th>Name</th>
+                <th>Project Manager</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="prj in projects">
+                <td style="vertical-align: middle;">{{ prj.paNumber }}</td>
+                <td style="vertical-align: middle;"><a ng-href="#/project/{{prj.id}}">{{prj.name}} {{prj.enabled === true ? "" : "(DISABLED)"}}</a></td>
+                <td style="vertical-align: middle;">{{ prj.projectManagerDTO.name }}</td>
+                <td style="vertical-align: middle;">{{ prj.initialDate | date:'dd-MMMM-yyyy'}}</td>
+                <td style="vertical-align: middle;">{{ prj.endDate | date:'dd-MMMM-yyyy'}}</td>
+                <td style="vertical-align: middle;">
+                    <a class="btn btn-default" ng-show="prj.enabled" ng-click="disable(prj.id)">Disable</a> 
+                    <a class="btn btn-default" ng-show="!prj.enabled" ng-click="enable(prj.id)">Enable</a>
+                    <a class="btn btn-danger" ng-show="prj.qtyConsultants == 0" ng-click="delete(prj.id)">Delete</a>
+                    <a class="btn btn-default" ng-href="#/project-consultants/{{prj.id}}">Consultants</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-primary" ng-href="#/project-timecard">Check Inconsistences</a>
+</div>
